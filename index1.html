@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Healthiffy — Fuel Your Fitness | Pune</title>
+  <meta name="description" content="Healthiffy Café — healthy, organic food and beverages in Pune. Two locations: FC Road & Kothrud (near MIT WPU). Order on WhatsApp." />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-brand">
+      <div class="logo-container">
+        <img src="img/images.jpg" alt="Healthiffy Logo" class="logo-image">
+        <div class="logo-text-container">
+          <div class="logo">HEALTHIFFY</div>
+          <div class="tagline">Fuel Your Fitness</div>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links" id="navLinks">
+      <a href="#menu">Menu</a>
+      <a href="#ambience">Ambience</a>
+      <a href="#locations">Locations</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#chatbot">AI Chat</a>
+      <a href="https://wa.me/918087228075?text=Hi%20Healthiffy!%20I%20want%20to%20place%20an%20order."
+         target="_blank" class="btn-wa nav-wa">
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" width="15" height="15" alt="" style="filter:brightness(0) invert(1);vertical-align:middle;margin-right:5px"/>
+        Order on WhatsApp
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div id="threejs-container" class="threejs-bg"></div>
+    <div class="hero-content">
+      <span class="badge">100% Natural · Organic · Guilt-Free</span>
+      <h1>Fuel your<br><em>fitness journey</em></h1>
+      <p>Fresh, wholesome café food and drinks crafted to nourish your body — right here in Pune.</p>
+      <div class="hero-btns">
+        <a href="#menu" class="btn-primary">View full menu</a>
+        <a href="https://wa.me/918087228075?text=Hi%20Healthiffy!%20I%20want%20to%20place%20an%20order."
+           target="_blank" class="btn-wa">Order on WhatsApp</a>
+        <a href="#locations" class="btn-ghost">Find us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ENHANCED ORDERING CART ===== -->
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <div class="cart-title">
+        <h3><i class="fas fa-shopping-bag"></i> Your Cart</h3>
+        <span class="cart-item-count" id="cartItemCount">0 items</span>
+      </div>
+      <button class="cart-close" onclick="toggleCart()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="cart-body">
+      <div class="cart-items" id="cartItems">
+        <div class="cart-empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-shopping-basket"></i>
+          </div>
+          <h4>Your cart is empty</h4>
+          <p>Add delicious items from our menu to get started!</p>
+          <button class="btn-primary" onclick="toggleCart(); document.getElementById('menu').scrollIntoView({behavior: 'smooth'});">
+            <i class="fas fa-utensils"></i> Browse Menu
+          </button>
+        </div>
+      </div>
+      
+      <div class="cart-summary" id="cartSummary" style="display: none;">
+        <div class="summary-details">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span id="cartSubtotal">₹0</span>
+          </div>
+          <div class="summary-row">
+            <span>Delivery Fee</span>
+            <span id="deliveryFee">₹0</span>
+          </div>
+          <div class="summary-row discount-row" style="display: none;">
+            <span>Discount</span>
+            <span id="discountAmount" style="color: var(--wa-green);">-₹0</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total</span>
+            <span id="cartTotal">₹0</span>
+          </div>
+        </div>
+        
+        <div class="promo-section">
+          <div class="promo-input-group">
+            <input type="text" id="promoCode" placeholder="Enter promo code" />
+            <button class="promo-apply" onclick="applyPromoCode()">Apply</button>
+          </div>
+        </div>
+        
+        <div class="checkout-actions">
+          <button class="btn-wa btn-large checkout-btn" onclick="sendOrderToWhatsApp()">
+            <i class="fab fa-whatsapp"></i>
+            <span>Order on WhatsApp</span>
+            <span class="btn-total" id="btnTotal">₹0</span>
+          </button>
+          <button class="btn-secondary" onclick="clearCart()">
+            <i class="fas fa-trash"></i> Clear Cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Cart Button -->
+  <button class="cart-toggle" onclick="toggleCart()" id="cartToggle">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+
+  <!-- ===== STATS ===== -->
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-num">120+</span><span class="stat-label">Menu items</span></div>
+    <div class="stat"><span class="stat-num">4.9 ★</span><span class="stat-label">Average rating</span></div>
+    <div class="stat"><span class="stat-num">2</span><span class="stat-label">Pune locations</span></div>
+    <div class="stat"><span class="stat-num">50k+</span><span class="stat-label">Happy guests</span></div>
+  </div>
+
+  <!-- ===== MENU ===== -->
+  <section class="section" id="menu">
+    <div class="container">
+      <span class="section-tag">Our menu</span>
+      <h2 class="section-title">Fresh from our kitchen</h2>
+      <p class="section-sub">Every dish made with real, whole ingredients. Starting from just ₹15.</p>
+
+      <div class="menu-tabs">
+        <button class="mtab active" data-tab="food">Food menu</button>
+        <button class="mtab" data-tab="bev">Beverages</button>
+      </div>
+
+      <!-- FOOD PANEL -->
+      <div class="menu-panel active" id="tab-food">
+        <!-- Popular Items Section -->
+        <div class="menu-section">
+          <div class="section-header">
+            <div class="section-icon">🔥</div>
+            <h3 class="section-title">Popular Items</h3>
+            <p class="section-desc">Our most loved healthy options</p>
+          </div>
+          <div class="menu-grid">
+            <div class="menu-card featured" data-name="Mix Veg Grill" data-price="65">
+              <div class="card-badge">Bestseller</div>
+              <div class="card-content">
+                <h4>Mix Veg Grill</h4>
+                <p>Fresh vegetables grilled to perfection</p>
+                <div class="card-footer">
+                  <span class="price">₹65</span>
+                  <button class="add-to-cart" onclick="addToCart('Mix Veg Grill', 65)">
+                    <i class="fas fa-plus"></i> Add
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="menu-card" data-name="Avocado Grill" data-price="95">
+              <div class="card-content">
+                <h4>Avocado Grill</h4>
+                <p>Creamy avocado with herbs</p>
+                <div class="card-footer">
+                  <span class="price">₹95</span>
+                  <button class="add-to-cart" onclick="addToCart('Avocado Grill', 95)">
+                    <i class="fas fa-plus"></i> Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sandwiches Section -->
+        <div class="menu-section">
+          <div class="section-header">
+            <div class="section-icon">🥪</div>
+            <h3 class="section-title">Sandwiches</h3>
+            <p class="section-desc">Healthy and delicious sandwiches</p>
+          </div>
+          <div class="menu-list">
+            <div class="menu-item" data-name="Mix Veg Grill" data-price="65">
+              <span class="item-name">Mix Veg Grill</span>
+              <span class="item-price">₹65</span>
+              <button class="add-to-cart" onclick="addToCart('Mix Veg Grill', 65)"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="menu-item" data-name="Chocolate Peanut Butter" data-price="65">
+              <span class="item-name">Chocolate Peanut Butter</span>
+              <span class="item-price">₹65</span>
+              <button class="add-to-cart" onclick="addToCart('Chocolate Peanut Butter', 65)"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="menu-item" data-name="Natural Peanut Butter" data-price="65">
+              <span class="item-name">Natural Peanut Butter</span>
+              <span class="item-price">₹65</span>
+              <button class="add-to-cart" onclick="addToCart('Natural Peanut Butter', 65)"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="menu-item" data-name="Paneer Grill" data-price="85">
+              <span class="item-name">Paneer Grill</span>
+              <span class="item-price">₹85</span>
+              <button class="add-to-cart" onclick="addToCart('Paneer Grill', 85)"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="menu-item" data-name="Avocado Grill" data-price="95">
+              <span class="item-name">Avocado Grill</span>
+              <span class="item-price">₹95</span>
+              <button class="add-to-cart" onclick="addToCart('Avocado Grill', 95)"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-category">Roasted Makhana</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Simple Roasted Makhana" data-price="75">
+            <span class="item-name">Simple Roasted Makhana</span>
+            <span class="item-price">₹75</span>
+            <button class="add-to-cart" onclick="addToCart('Simple Roasted Makhana', 75)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Peri Peri Makhana" data-price="85">
+            <span class="item-name">Peri Peri Makhana</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Peri Peri Makhana', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Ghee Pepper Makhana" data-price="95">
+            <span class="item-name">Ghee Pepper Makhana</span>
+            <span class="item-price">₹95</span>
+            <button class="add-to-cart" onclick="addToCart('Ghee Pepper Makhana', 95)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="menu-category">Oats Bowl</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Tropical Fruit & Honey Oats" data-price="85">
+            <span class="item-name">Tropical Fruit & Honey Oats</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Tropical Fruit & Honey Oats', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Dark Chocolate Oats" data-price="95">
+            <span class="item-name">Dark Chocolate Oats</span>
+            <span class="item-price">₹95</span>
+            <button class="add-to-cart" onclick="addToCart('Dark Chocolate Oats', 95)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="menu-category">Salad Bowls</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Peanut Cucumber" data-price="50">
+            <span class="item-name">Peanut Cucumber</span>
+            <span class="item-price">₹50</span>
+            <button class="add-to-cart" onclick="addToCart('Peanut Cucumber', 50)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Black Chana Salad" data-price="65">
+            <span class="item-name">Black Chana Salad</span>
+            <span class="item-price">₹65</span>
+            <button class="add-to-cart" onclick="addToCart('Black Chana Salad', 65)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Corn & Veggie Crunch" data-price="75">
+            <span class="item-name">Corn &amp; Veggie Crunch</span>
+            <span class="item-price">₹75</span>
+            <button class="add-to-cart" onclick="addToCart('Corn & Veggie Crunch', 75)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Broccoli Peanut Crunch" data-price="85">
+            <span class="item-name">Broccoli Peanut Crunch</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Broccoli Peanut Crunch', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Mix Sprout Salad" data-price="85">
+            <span class="item-name">Mix Sprout Salad</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Mix Sprout Salad', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Soya Chunk Power Bowl" data-price="85">
+            <span class="item-name">Soya Chunk Power Bowl</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Soya Chunk Power Bowl', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Green Velvet Salad" data-price="95">
+            <span class="item-name">Green Velvet Salad</span>
+            <span class="item-price">₹95</span>
+            <button class="add-to-cart" onclick="addToCart('Green Velvet Salad', 95)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Desi Chickpea Salad" data-price="105">
+            <span class="item-name">Desi Chickpea Salad</span>
+            <span class="item-price">₹105</span>
+            <button class="add-to-cart" onclick="addToCart('Desi Chickpea Salad', 105)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Avocado Tomato Salad" data-price="125">
+            <span class="item-name">Avocado Tomato Salad</span>
+            <span class="item-price">₹125</span>
+            <button class="add-to-cart" onclick="addToCart('Avocado Tomato Salad', 125)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="menu-category">Fruit Bowls</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Classic Fruit Bowl" data-price="75">
+            <span class="item-name">Classic Fruit Bowl</span>
+            <span class="item-price">₹75</span>
+            <button class="add-to-cart" onclick="addToCart('Classic Fruit Bowl', 75)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Melon Mint Medley" data-price="85">
+            <span class="item-name">Melon Mint Medley</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Melon Mint Medley', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="menu-category">Other Bowls</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Mashed Potato" data-price="50">
+            <span class="item-name">Mashed Potato</span>
+            <span class="item-price">₹50</span>
+            <button class="add-to-cart" onclick="addToCart('Mashed Potato', 50)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Guacamole" data-price="85">
+            <span class="item-name">Guacamole</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Guacamole', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="menu-category">Chia Pudding</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Nut and Banana Topping" data-price="75">
+            <span class="item-name">Nut and Banana Topping</span>
+            <span class="item-price">₹75</span>
+            <button class="add-to-cart" onclick="addToCart('Nut and Banana Topping', 75)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Apple Cinnamon Topping" data-price="85">
+            <span class="item-name">Apple Cinnamon Topping</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Apple Cinnamon Topping', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Mixed Berries Topping" data-price="95">
+            <span class="item-name">Mixed Berries Topping</span>
+            <span class="item-price">₹95</span>
+            <button class="add-to-cart" onclick="addToCart('Mixed Berries Topping', 95)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="monthly-plan">
+          <div class="plan-label">Opening offer — monthly plan</div>
+          <div class="plan-price">₹2,250 / month</div>
+          <p class="plan-desc">30 Salad Bowls + 12 Healthy Green Teas + 3 Smoothies · 7-day extension for absent days · Sandwich or Oats Bowl as alternative on any 5 days</p>
+          <a href="https://wa.me/918087228075?text=Hi%20Healthiffy!%20I%20want%20to%20know%20more%20about%20the%20monthly%20plan."
+             target="_blank" class="btn-wa" style="margin-top:1rem;display:inline-block">Enquire on WhatsApp</a>
+        </div>
+      </div>
+
+      <!-- BEVERAGES PANEL -->
+      <div class="menu-panel" id="tab-bev">
+        <div class="menu-category">Healthiffy Special</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Kashmiri Kahwa (Pure)" data-price="50">
+            <span class="item-name">Kashmiri Kahwa (Pure)</span>
+            <span class="item-price">₹50</span>
+            <button class="add-to-cart" onclick="addToCart('Kashmiri Kahwa (Pure)', 50)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Kashmiri Kahwa (Sweet)" data-price="50">
+            <span class="item-name">Kashmiri Kahwa (Sweet)</span>
+            <span class="item-price">₹50</span>
+            <button class="add-to-cart" onclick="addToCart('Kashmiri Kahwa (Sweet)', 50)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Kashmiri Noon Chai (Pink)" data-price="65">
+            <span class="item-name">Kashmiri Noon Chai (Pink)</span>
+            <span class="item-price">₹65</span>
+            <button class="add-to-cart" onclick="addToCart('Kashmiri Noon Chai (Pink)', 65)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="menu-category">Smoothies</div>
+        <div class="menu-list">
+          <div class="menu-item" data-name="Date Almond Energizer" data-price="50">
+            <span class="item-name">Date Almond Energizer</span>
+            <span class="item-price">₹50</span>
+            <button class="add-to-cart" onclick="addToCart('Date Almond Energizer', 50)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Melon Mint Cooler" data-price="65">
+            <span class="item-name">Melon Mint Cooler</span>
+            <span class="item-price">₹65</span>
+            <button class="add-to-cart" onclick="addToCart('Melon Mint Cooler', 65)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Beet Berry Power" data-price="75">
+            <span class="item-name">Beet Berry Power</span>
+            <span class="item-price">₹75</span>
+            <button class="add-to-cart" onclick="addToCart('Beet Berry Power', 75)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Papaya Refresh" data-price="75">
+            <span class="item-name">Papaya Refresh</span>
+            <span class="item-price">₹75</span>
+            <button class="add-to-cart" onclick="addToCart('Papaya Refresh', 75)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Berrylicious Glow" data-price="85">
+            <span class="item-name">Berrylicious Glow</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Berrylicious Glow', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Choco Oats Builder" data-price="85">
+            <span class="item-name">Choco Oats Builder</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Choco Oats Builder', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Green Zen Detox" data-price="85">
+            <span class="item-name">Green Zen Detox</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Green Zen Detox', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Golden Aura" data-price="85">
+            <span class="item-name">Golden Aura</span>
+            <span class="item-price">₹85</span>
+            <button class="add-to-cart" onclick="addToCart('Golden Aura', 85)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Dragonfuel" data-price="95">
+            <span class="item-name">Dragonfuel</span>
+            <span class="item-price">₹95</span>
+            <button class="add-to-cart" onclick="addToCart('Dragonfuel', 95)"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="menu-item" data-name="Avocado Royale" data-price="115">
+            <span class="item-name">Avocado Royale</span>
+            <span class="item-price">₹115</span>
+            <button class="add-to-cart" onclick="addToCart('Avocado Royale', 115)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
+        <div class="menu-category">Coffee &amp; Tea (Small / Large)</div>
+        <div class="menu-list">
+          <div class="menu-item"><span class="item-name">Coffee</span><span class="item-price">₹15 / ₹25</span></div>
+          <div class="menu-item"><span class="item-name">Cardamom Tea</span><span class="item-price">₹15 / ₹25</span></div>
+          <div class="menu-item"><span class="item-name">Lemon Tea</span><span class="item-price">₹15 / ₹25</span></div>
+          <div class="menu-item"><span class="item-name">Hot Chocolate</span><span class="item-price">₹20 / ₹35</span></div>
+        </div>
+
+        <div class="menu-category">Healthy Green Teas</div>
+        <div class="menu-list">
+          <div class="menu-item"><span class="item-name">Hibiscus Cinnamon Clove Tea</span><span class="item-price">₹25</span></div>
+          <div class="menu-item"><span class="item-name">Jasmine Tea</span><span class="item-price">₹25</span></div>
+          <div class="menu-item"><span class="item-name">Dandelion Tea</span><span class="item-price">₹25</span></div>
+          <div class="menu-item"><span class="item-name">Rose Tea</span><span class="item-price">₹25</span></div>
+          <div class="menu-item"><span class="item-name">Kesar Tea</span><span class="item-price">₹25</span></div>
+          <div class="menu-item"><span class="item-name">Traditional Green Tea</span><span class="item-price">₹25</span></div>
+          <div class="menu-item"><span class="item-name">Mint Tea</span><span class="item-price">₹35</span></div>
+          <div class="menu-item"><span class="item-name">Chamomile Tea</span><span class="item-price">₹35</span></div>
+          <div class="menu-item"><span class="item-name">Turmeric Tulsi Ginger Tea</span><span class="item-price">₹35</span></div>
+          <div class="menu-item"><span class="item-name">Ashwagandha Tea</span><span class="item-price">₹35</span></div>
+        </div>
+
+        <div class="menu-category">Hot Beverage Shots</div>
+        <div class="menu-list">
+          <div class="menu-item"><span class="item-name">Everyday Energy Shot (Ginger)</span><span class="item-price">₹25</span></div>
+          <div class="menu-item"><span class="item-name">Immunity Glow Shot (Amla)</span><span class="item-price">₹35</span></div>
+        </div>
+
+        <div class="menu-category">Fresh Fruits &amp; Juice</div>
+        <div class="menu-list">
+          <div class="menu-item"><span class="item-name">Watermelon</span><span class="item-price">₹50</span></div>
+          <div class="menu-item"><span class="item-name">Cucumber Mint</span><span class="item-price">₹65</span></div>
+          <div class="menu-item"><span class="item-name">Pineapple</span><span class="item-price">₹75</span></div>
+          <div class="menu-item"><span class="item-name">Orange / Mosambi</span><span class="item-price">₹75</span></div>
+          <div class="menu-item"><span class="item-name">ABC (Apple, Beet, Carrot)</span><span class="item-price">₹85</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AMBIENCE ===== -->
+  <section class="section section-alt" id="ambience">
+    <div class="container">
+      <span class="section-tag">Ambience</span>
+      <h2 class="section-title">A space to eat well &amp; feel good</h2>
+      <p class="section-sub">Cosy, calm, and designed to make every visit memorable.</p>
+      <div class="gallery">
+        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&q=75" alt="Café interior" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=600&q=75" alt="Café seating" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=75" alt="Healthy bowl" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=600&q=75" alt="Smoothies" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=75" alt="Matcha latte" loading="lazy" />
+        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&q=75" alt="Café atmosphere" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHY US ===== -->
+  <section class="section" id="why">
+    <div class="container">
+      <span class="section-tag">Why Healthiffy</span>
+      <h2 class="section-title">Good food, made honestly</h2>
+      <p class="section-sub">We believe healthy eating should taste incredible — not feel like a compromise.</p>
+      <div class="features-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🌱</div>
+          <h3>Organic ingredients</h3>
+          <p>Locally sourced from Pune farms every morning. No shortcuts, no compromises.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🚫</div>
+          <h3>Zero nasties</h3>
+          <p>No refined sugar, no preservatives, no artificial flavours. Just real, whole food.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">💪</div>
+          <h3>Fitness-forward</h3>
+          <p>Every dish designed to fuel your workout, aid recovery, and keep you energised.</p>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">♻️</div>
+          <h3>Eco packaging</h3>
+          <p>100% compostable packaging. Good for you and good for the planet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== LOCATIONS ===== -->
+  <section class="section section-alt" id="locations">
+    <div class="container">
+      <span class="section-tag">Find us</span>
+      <h2 class="section-title">Two locations in Pune</h2>
+      <p class="section-sub">Walk in anytime or order via WhatsApp — we're close to you.</p>
+      <div class="locations-grid">
+        <div class="loc-card">
+          <div class="loc-icon">📍</div>
+          <h3>Healthiffy — FC Road</h3>
+          <p>FC Road, Pune<br>Open Mon–Sun · 8 am – 9 pm<br>+91 82630 45675</p>
+          <div class="loc-btns">
+            <a href="https://maps.google.com/?q=FC+Road+Pune" target="_blank" class="btn-primary">Get directions</a>
+            <a href="https://wa.me/918087228075?text=Hi%20Healthiffy%20FC%20Road!%20I%20want%20to%20enquire." target="_blank" class="btn-wa">WhatsApp</a>
+          </div>
+        </div>
+        <div class="loc-card">
+          <div class="loc-icon">📍</div>
+          <h3>Healthiffy — Kothrud (MIT WPU)</h3>
+          <p>Shop No. 22, Anubhav, Kothrud, Pune<br>Near MIT WPU College<br>Open Mon–Sun · 8 am – 9 pm</p>
+          <div class="loc-btns">
+            <a href="https://maps.google.com/?q=Shop+No+22+Anubhav+Kothrud+Pune" target="_blank" class="btn-primary">Get directions</a>
+            <a href="https://wa.me/918087228075?text=Hi%20Healthiffy%20Kothrud!%20I%20want%20to%20enquire." target="_blank" class="btn-wa">WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REVIEWS ===== -->
+  <section class="section" id="reviews">
+    <div class="container">
+      <span class="section-tag">Reviews</span>
+      <h2 class="section-title">What our guests say</h2>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>The salad bowls are genuinely filling and so fresh. I've been on the monthly plan for 3 months — best fitness decision I made.</p>
+          <div class="reviewer"><div class="avatar">PR</div><span>Priya R.</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>Kashmiri Kahwa is absolutely divine. Healthiffy near MIT WPU is my go-to spot between lectures — affordable and delicious!</p>
+          <div class="reviewer"><div class="avatar">AM</div><span>Arjun M.</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>Love that everything is clean and healthy. The Beet Berry Power smoothie is my favourite post-gym treat. Highly recommend!</p>
+          <div class="reviewer"><div class="avatar">SK</div><span>Sneha K.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHATSAPP CTA ===== -->
+  <section class="wa-section">
+    <h2>Ready to order? Chat with us directly</h2>
+    <p>Quick, easy, and we confirm in minutes. Available all day.</p>
+    <a href="https://wa.me/918087228075?text=Hi%20Healthiffy!%20I'd%20like%20to%20place%20an%20order."
+       target="_blank" class="btn-wa btn-large">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Message us on WhatsApp
+    </a>
+  </section>
+
+  <!-- ===== AI CHATBOT ===== -->
+  <section class="section section-alt" id="chatbot">
+    <div class="container" style="max-width:720px">
+      <span class="section-tag">AI assistant</span>
+      <h2 class="section-title">Ask anything about Healthiffy</h2>
+      <p class="section-sub">Menu, prices, nutrition, locations — our AI knows it all. Powered by Claude.</p>
+
+      <div class="chatbox">
+        <div class="chat-header">
+          <div class="chat-dot"></div>
+          <div>
+            <div class="chat-name">Healthiffy AI</div>
+            <div class="chat-status">Online · powered by Claude</div>
+          </div>
+        </div>
+        <div class="chat-msgs" id="chatMsgs">
+          <div class="msg bot"><div class="bubble">Hi! I'm the Healthiffy AI. Ask me about our menu, prices, monthly plan, locations, or anything else!</div></div>
+        </div>
+        <div class="quick-qs" id="quickQs">
+          <button class="quick-q" onclick="askQuick(this)">Best smoothie post-gym?</button>
+          <button class="quick-q" onclick="askQuick(this)">Tell me about the monthly plan</button>
+          <button class="quick-q" onclick="askQuick(this)">Cheapest healthy meal?</button>
+          <button class="quick-q" onclick="askQuick(this)">Where are you located?</button>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" class="chat-input"
+                 placeholder="Ask about menu, nutrition, locations..."
+                 onkeydown="if(event.key==='Enter') sendChat()" />
+          <button class="chat-send" onclick="sendChat()">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">HEALTHIFFY</div>
+        <div class="footer-tagline">Fuel Your Fitness · Pune</div>
+        <a href="https://www.instagram.com/healthiffy_pune/" target="_blank" class="ig-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+          @healthiffy_pune
+        </a>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <p>Mon – Sun: 8 am – 9 pm</p>
+        <p>Dine-in &amp; Takeaway</p>
+      </div>
+      <div class="footer-col">
+        <h4>Locations</h4>
+        <a href="https://maps.google.com/?q=FC+Road+Pune" target="_blank">FC Road, Pune</a>
+        <a href="https://maps.google.com/?q=Shop+No+22+Anubhav+Kothrud+Pune" target="_blank">Shop 22, Anubhav, Kothrud</a>
+        <p style="font-size:12px;margin-top:2px">(Near MIT WPU College)</p>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <div class="social-links">
+          <a href="https://wa.me/918087228075" target="_blank" class="social-link">
+            <i class="fab fa-whatsapp"></i> WhatsApp: 8087228075
+          </a>
+          <a href="tel:+918263045675" class="social-link">
+            <i class="fas fa-phone"></i> Call: +91 82630 45675
+          </a>
+          <a href="https://www.instagram.com/healthiffy_pune/" target="_blank" class="social-link">
+            <i class="fab fa-instagram"></i> Instagram: @healthiffy_pune
+          </a>
+          <a href="https://www.facebook.com/healthiffy.pune" target="_blank" class="social-link">
+            <i class="fab fa-facebook"></i> Facebook
+          </a>
+          <a href="https://twitter.com/healthiffy_pune" target="_blank" class="social-link">
+            <i class="fab fa-twitter"></i> Twitter
+          </a>
+          <a href="https://www.linkedin.com/company/healthiffy-cafe" target="_blank" class="social-link">
+            <i class="fab fa-linkedin"></i> LinkedIn
+          </a>
+          <a href="https://www.youtube.com/channel/healthiffy" target="_blank" class="social-link">
+            <i class="fab fa-youtube"></i> YouTube
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Healthiffy Café, Pune. Fuel Your Fitness.</div>
+  </footer>
+
+  <!-- Floating WhatsApp button -->
+  <a href="https://wa.me/918087228075?text=Hi%20Healthiffy!%20I%20want%20to%20enquire."
+     target="_blank" class="float-wa" aria-label="Chat on WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+
+  <script src="script.js"></script>
+</body>
+</html>
